@@ -90,8 +90,8 @@ class HypersphericalEnergy(tf.keras.regularizers.Regularizer):
     """
     Hyperspherical energy as described in https://arxiv.org/pdf/1805.09298.pdf
     
-    The hyperspherical energy is conceived as a loss on activations
-    To use, set 'activation_regularizer=HypersphericalEnergy()' in tf.keras.layer construction
+    The hyperspherical energy is conceived as a loss on weights
+    To use, set 'kernel_regularizer=HypersphericalEnergy()' in tf.keras.layer construction
     """
     def __init__(self, axis=0, power=0, 
                  use_half_mhe=False, use_arccos=False, 
