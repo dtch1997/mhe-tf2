@@ -32,7 +32,8 @@ def hyperspherical_energy(weight_matrix, axis=0, power=0,
         axis:
             Dimension which corresponds to "number of neurons". 
             
-        use_half_mhe: Set True for half-MHE loss. Default: False. 
+        use_half_mhe: 
+            Set True for half-MHE loss. Default: False. 
         
         use_arccos:
             Whether to use arccos in the nonlinearity function
