@@ -9,15 +9,15 @@ Created on Wed Sep  2 15:50:10 2020
 import tensorflow as tf
 from math import pi as PI
 
-def _compute_norm(x, axis=[0], keep_dims=False, epsilon=1e-12):
+def _compute_norm(x, axis=[0], keepdims=False, epsilon=1e-12):
     """
     Compute the norm of x along the specified axis / axes. 
     """
-    x_norm_squared = tf.math.reduce_sum(x*x, axis=axis, keep_dims=keep_dims)
+    x_norm_squared = tf.math.reduce_sum(x*x, axis=axis, keepdims=keepdims)
     return tf.math.sqrt(x_norm_squared + epsilon)
         
 
-@tf.keras.utils.register_keras_serializable(package='Custom', name='HypSphEner')
+@tf.keras.utils.register_keras_serializable(package='Custom', name='hyperspherical_energy')
 def hyperspherical_energy(weight_matrix, axis=0, power=0, 
                           use_half_mhe=False, use_arccos=False, 
                           epsilon = 1e-4):
@@ -61,7 +61,7 @@ def hyperspherical_energy(weight_matrix, axis=0, power=0,
         weight_matrix = tf.concat((weight_matrix, weight_matrix_neg), axis=1)
         num_filters *= 2
     
-    weight_norms = _compute_norm(weight_matrix, axis=[0], keep_dims=True, epsilon=epsilon)
+    weight_norms = _compute_norm(weight_matrix, axis=[0], keepdims=True, epsilon=epsilon)
     weight_norm_pairwise = tf.linalg.matmul(tf.transpose(weight_norms), weight_norms)
     inner_product_pairwise = tf.linalg.matmul(tf.transpose(weight_matrix), weight_matrix)
     inner_product_normalized = inner_product_pairwise / weight_norm_pairwise
@@ -77,7 +77,7 @@ def hyperspherical_energy(weight_matrix, axis=0, power=0,
     final = cross_terms
     if power != 0:
         final = tf.pow(final, tf.ones_like(cross_terms) * (-power))
-    final -= tf.matrix_band_part(final, -1, 0)
+    final -= tf.linalg.band_part(final, -1, 0)
     count = num_filters * (num_filters - 1) / 2.0
     
     loss =  1 * tf.math.reduce_sum(final) / count
@@ -85,7 +85,7 @@ def hyperspherical_energy(weight_matrix, axis=0, power=0,
     
 
 
-@tf.keras.utils.register_keras_serializable(package='Custom', name='HypSphEner')
+@tf.keras.utils.register_keras_serializable(package='Custom', name='HypersphericalEnergy')
 class HypersphericalEnergy(tf.keras.regularizers.Regularizer):
     """
     Hyperspherical energy as described in https://arxiv.org/pdf/1805.09298.pdf
