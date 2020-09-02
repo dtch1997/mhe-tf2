@@ -23,7 +23,8 @@ def hyperspherical_energy(weight_matrix, axis=0, power=0,
                           epsilon = 1e-4):
     """
     Parameters:
-        weight_matrix: Tensor of layer weights. 
+        weight_matrix: 
+            Tensor of layer weights. 
             One dimension should correspond to "number of neurons" and the remaining are arbitrary.
             
         power: 
